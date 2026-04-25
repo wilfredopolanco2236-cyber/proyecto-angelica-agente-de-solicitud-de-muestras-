@@ -14,4 +14,8 @@ jobs:
         run: |
           test -f README.md
           test -f docs/ANGELICA_SUBAGENT_SPEC_V1.md
+          test -f docs/ARCHITECTURE.md
           test -f contracts/angelica_input.contract.json
+          test -f contracts/angelica_output.contract.json
+          test -f src/api/whatsappInbound.ts
+          test -f src/core/intent_engine/index.ts

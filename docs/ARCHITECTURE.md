@@ -1,17 +1,26 @@
 # Architecture Overview
 
-## Current channel integration
-`WhatsApp -> n8n (thin adapter) -> /whatsapp/inbound -> Angelica Core`
+## Position in swarm
+Angélica is a **domain subagent** (`agent.angelica.samples.v1`) ready to be called by a future orchestrator. It should not own global orchestration.
 
-## Internal modules
-- `context_builder`: carga contexto operacional.
-- `intent_engine`: clasifica intención y entidades.
-- `planner`: genera plan de acciones.
-- `policy_guard`: valida permisos y riesgo.
-- `executor`: ejecuta herramientas permitidas.
+## Runtime pipeline
+1. Channel adapter (n8n thin workflow)
+2. `whatsapp/inbound` endpoint
+3. Context Builder
+4. Intent Engine
+5. Planner
+6. Policy Guard
+7. Tool Executor
+8. Audit + response
 
-## Swarm-ready principles
-- Contrato versionado de entrada/salida.
-- Correlation IDs (`task_id`, `trace_id`).
-- Modo `plan_only` para simulación del orquestador futuro.
-- Capacidades declarativas en manifest.
+## Swarm-ready guarantees
+- Versioned contracts (`contracts/*.json`)
+- Correlation IDs (`task_id`, `orchestrator_trace_id`, `traceId`)
+- Dual mode (`plan_only`, `execute`)
+- Explicit handoff envelope for future agent-to-agent delegation
+
+## Reliability constraints
+- Idempotency by `whatsapp_message_id`
+- Policy-first execution
+- No business logic in n8n
+- Deterministic action planning for critical flows

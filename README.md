@@ -2,22 +2,27 @@
 
 Subagente especializado para gestionar solicitudes de muestras de ASAVIM con arquitectura **swarm-ready**.
 
-## Objetivo
-Angélica opera como subagente de dominio (no como orquestador global) y está preparada para ser invocada por un orquestador de enjambre en el futuro.
+## Qué es
+Angélica es un subagente de dominio (`agent.angelica.samples.v1`) preparado para integrarse con un orquestador de enjambre en el futuro.
 
-## Capacidades principales
-- Conversación natural por WhatsApp (texto/voz).
-- Gestión de borradores de solicitud de muestras.
-- Integración segura con catálogo, clientes, PDF y auditoría.
-- Validación documental de PDF firmado.
-- Ejecución de herramientas con RBAC y políticas.
+## Principios
+- IA entiende intención y contexto.
+- Backend valida políticas y ejecuta herramientas.
+- n8n se mantiene delgado (transporte/orquestación, no cerebro).
 
 ## Estructura
 - `docs/`: especificaciones funcionales y técnicas.
-- `contracts/`: contratos JSON de entrada/salida entre orquestador y subagente.
-- `src/`: código fuente del subagente.
-- `tests/`: pruebas unitarias, integración y e2e.
-- `infra/`: assets de despliegue e integración n8n.
+- `contracts/`: contratos JSON de entrada/salida e intención.
+- `src/`: módulos core (contexto, intención, plan, política, ejecución).
+- `tests/`: pruebas base de regresión.
+- `infra/`: notas de integración con Docker y n8n.
 
-## Estado
-Scaffold inicial listo para implementación incremental.
+## Módulos core
+- `context_builder`: normalización y contexto conversacional.
+- `intent_engine`: detección de intención y entidades.
+- `planner`: plan de acciones por estado/intención.
+- `policy_guard`: autorización por rol/permisos.
+- `executor`: ejecución segura contra tool registry.
+
+## Estado actual
+Scaffold funcional con pipeline interno y contratos versionados listos para iteración.

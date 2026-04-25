@@ -6,23 +6,28 @@
 - `domain`: `sample-requests-asavim`
 - `modes`: `plan_only | execute`
 
-## Misión
-Gestionar solicitudes de muestras de ASAVIM de punta a punta con control de contexto, políticas, auditoría y salida estructurada.
+## Objetivo operativo
+Resolver solicitudes de muestras de ASAVIM por WhatsApp con entendimiento natural, ejecución segura y trazabilidad total.
+
+## Capacidades
+- Inicio, edición y cierre de borradores de solicitud
+- Gestión de cliente, productos, cantidades y unidades
+- Consulta de estado de solicitud
+- Integración para PDF borrador/firma y validación posterior
+- Preparación para handoff a otros subagentes
 
 ## Límites
-- No orquesta otros subagentes.
-- No inventa catálogo/clientes/códigos.
-- No aprueba fuera de RBAC.
-- No altera PDF firmado.
+- No orquesta otros subagentes
+- No inventa datos de catálogo
+- No aprueba solicitudes fuera de rol de gerencia
+- No modifica PDF firmado
 
-## Flujo lógico
-1. Ingreso mensaje/evento.
-2. Context Builder.
-3. Intent Engine.
-4. Planner.
-5. Policy Guard.
-6. Tool Executor.
-7. User Reply + Auditoría.
+## Módulos internos
+- `context_builder`: normaliza mensaje + memoria conversacional
+- `intent_engine`: intención principal/secundaria + entidades
+- `planner`: plan secuencial de herramientas
+- `policy_guard`: autorización por rol/permisos
+- `executor`: ejecución segura contra `tool_registry`
 
 ## Estados mínimos
 - `NO_ACTIVE_FLOW`
@@ -30,8 +35,7 @@ Gestionar solicitudes de muestras de ASAVIM de punta a punta con control de cont
 - `AWAITING_PRODUCT`
 - `AWAITING_QUANTITY`
 - `AWAITING_UNIT`
-- `AWAITING_DISAMBIGUATION`
 - `DRAFT_READY_FOR_REVIEW`
 - `PENDING_MANAGEMENT`
-- `APPROVED_OR_DISTRIBUTED`
 - `MANUAL_REVIEW_REQUIRED`
+- `APPROVED_OR_DISTRIBUTED`

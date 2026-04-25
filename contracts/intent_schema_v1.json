@@ -7,8 +7,10 @@
     "primary_intent",
     "secondary_intents",
     "confidence",
+    "risk_level",
     "entities",
     "missing_slots",
+    "state_transition",
     "actions",
     "reply",
     "needs_confirmation"
@@ -21,10 +23,20 @@
       "items": { "type": "string" }
     },
     "confidence": { "type": "string", "enum": ["high", "medium", "low"] },
+    "risk_level": { "type": "string", "enum": ["low", "medium", "high"] },
     "entities": { "type": "object" },
     "missing_slots": {
       "type": "array",
       "items": { "type": "string" }
+    },
+    "state_transition": {
+      "type": "object",
+      "required": ["from", "to"],
+      "properties": {
+        "from": { "type": "string" },
+        "to": { "type": "string" }
+      },
+      "additionalProperties": false
     },
     "actions": {
       "type": "array",
