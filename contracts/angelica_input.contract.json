@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Angelica Input Contract",
+  "type": "object",
+  "required": [
+    "contract_version",
+    "task_id",
+    "orchestrator_trace_id",
+    "caller_agent_id",
+    "mode",
+    "goal",
+    "user_context",
+    "conversation_context",
+    "input_payload"
+  ],
+  "properties": {
+    "contract_version": { "type": "string", "const": "1.1.0" },
+    "task_id": { "type": "string" },
+    "orchestrator_trace_id": { "type": "string" },
+    "caller_agent_id": { "type": "string" },
+    "mode": { "type": "string", "enum": ["plan_only", "execute"] },
+    "goal": { "type": "string" },
+    "constraints": {
+      "type": "object",
+      "properties": {
+        "rbac_strict": { "type": "boolean" },
+        "require_confirmation_for_high_risk": { "type": "boolean" },
+        "deadline_ms": { "type": "number" }
+      },
+      "additionalProperties": false
+    },
+    "user_context": {
+      "type": "object",
+      "required": ["phone", "roles", "permissions"],
+      "properties": {
+        "phone": { "type": "string" },
+        "roles": { "type": "array", "items": { "type": "string" } },
+        "permissions": { "type": "array", "items": { "type": "string" } },
+        "name": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "conversation_context": {
+      "type": "object",
+      "required": ["state"],
+      "properties": {
+        "state": { "type": "string" },
+        "last_messages": { "type": "array", "items": { "type": "string" } },
+        "active_draft_id": { "type": ["string", "null"] }
+      },
+      "additionalProperties": false
+    },
+    "input_payload": {
+      "type": "object",
+      "required": ["channel", "message_type"],
+      "properties": {
+        "channel": { "type": "string", "enum": ["whatsapp"] },
+        "message_type": { "type": "string", "enum": ["text", "voice", "document"] },
+        "text": { "type": "string" },
+        "audio_id": { "type": "string" },
+        "document_id": { "type": "string" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

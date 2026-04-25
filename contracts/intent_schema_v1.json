@@ -1,0 +1,57 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Angelica Intent Decision",
+  "type": "object",
+  "required": [
+    "goal",
+    "primary_intent",
+    "secondary_intents",
+    "confidence",
+    "risk_level",
+    "entities",
+    "missing_slots",
+    "state_transition",
+    "actions",
+    "reply",
+    "needs_confirmation"
+  ],
+  "properties": {
+    "goal": { "type": "string" },
+    "primary_intent": { "type": "string" },
+    "secondary_intents": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "confidence": { "type": "string", "enum": ["high", "medium", "low"] },
+    "risk_level": { "type": "string", "enum": ["low", "medium", "high"] },
+    "entities": { "type": "object" },
+    "missing_slots": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "state_transition": {
+      "type": "object",
+      "required": ["from", "to"],
+      "properties": {
+        "from": { "type": "string" },
+        "to": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["tool", "args"],
+        "properties": {
+          "tool": { "type": "string" },
+          "args": { "type": "object" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "reply": { "type": "string" },
+    "needs_confirmation": { "type": "boolean" }
+  },
+  "additionalProperties": false
+}
