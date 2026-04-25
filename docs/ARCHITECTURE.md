@@ -10,8 +10,9 @@ Angélica is a **domain subagent** (`agent.angelica.samples.v1`) ready to be cal
 4. Intent Engine
 5. Planner
 6. Policy Guard
-7. Tool Executor
-8. Audit + response
+7. Executor
+8. Orchestrator response composer
+9. Audit + response
 
 ## Swarm-ready guarantees
 - Versioned contracts (`contracts/*.json`)
@@ -24,3 +25,4 @@ Angélica is a **domain subagent** (`agent.angelica.samples.v1`) ready to be cal
 - Policy-first execution
 - No business logic in n8n
 - Deterministic action planning for critical flows
+- Contract and scenario checks in CI (`tests/contract_validation.py`)

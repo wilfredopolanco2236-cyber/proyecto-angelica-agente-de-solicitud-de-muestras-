@@ -1,7 +1,5 @@
 import { buildContext } from '../core/context_builder';
-import { classifyIntent } from '../core/intent_engine';
-import { buildPlan } from '../core/planner';
-import { executeActions } from '../core/executor';
+import { runOrchestrator } from '../core/orchestrator';
 import { ConversationState, UserContext } from '../types';
 
 export interface InboundPayload {
@@ -13,11 +11,18 @@ export interface InboundPayload {
 
 export interface InboundResponse {
   traceId: string;
+  goal: string;
   intent: string;
   confidence: 'high' | 'medium' | 'low';
+  riskLevel: 'low' | 'medium' | 'high';
   nextState: ConversationState;
+  needsConfirmation: boolean;
+  userReply: string;
   executions: { ok: boolean; tool: string; message: string }[];
+  duplicateMessage: boolean;
 }
+
+const processedMessages = new Set<string>();
 
 export function routeWhatsappThroughAngelica(
   payload: InboundPayload,
@@ -26,6 +31,23 @@ export function routeWhatsappThroughAngelica(
 ): InboundResponse {
   const traceId = `${payload.messageId}:${payload.phone}`;
 
+  if (processedMessages.has(payload.messageId)) {
+    return {
+      traceId,
+      goal: 'idempotent_noop',
+      intent: 'UNKNOWN',
+      confidence: 'low',
+      riskLevel: 'low',
+      nextState: currentState,
+      needsConfirmation: false,
+      userReply: 'Mensaje duplicado detectado. No repetí acciones.',
+      executions: [],
+      duplicateMessage: true
+    };
+  }
+
+  processedMessages.add(payload.messageId);
+
   const context = buildContext({
     traceId,
     rawText: payload.text ?? '',
@@ -33,18 +55,18 @@ export function routeWhatsappThroughAngelica(
     memory: { state: currentState }
   });
 
-  const decision = classifyIntent(context);
-  const plan = buildPlan(decision, currentState);
-  const executions = executeActions(
-    plan.actions.map((action) => ({ tool: action.tool, args: action.args })),
-    user
-  );
+  const orchestration = runOrchestrator(context);
 
   return {
     traceId,
-    intent: decision.primaryIntent,
-    confidence: decision.confidence,
-    nextState: plan.nextState,
-    executions
+    goal: orchestration.goal,
+    intent: orchestration.intent,
+    confidence: orchestration.confidence,
+    riskLevel: orchestration.riskLevel,
+    nextState: orchestration.nextState as ConversationState,
+    needsConfirmation: orchestration.needsConfirmation,
+    userReply: orchestration.userReply,
+    executions: orchestration.executions,
+    duplicateMessage: false
   };
 }

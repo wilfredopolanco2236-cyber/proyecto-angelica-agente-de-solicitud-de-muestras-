@@ -1,0 +1,26 @@
+[
+  {
+    "input": "solicitud de muestras",
+    "expected_intent": "START_SAMPLE_REQUEST"
+  },
+  {
+    "input": "para laboratorios alpha",
+    "expected_intent": "SET_CLIENT"
+  },
+  {
+    "input": "10 gramos de acetaminofen dc 90",
+    "expected_intent": "ADD_ITEM"
+  },
+  {
+    "input": "solo eso",
+    "expected_intent": "FINISH_DRAFT"
+  },
+  {
+    "input": "quita acetaminofen",
+    "expected_intent": "REMOVE_ITEM"
+  },
+  {
+    "input": "estado sm20260425-sab-0009",
+    "expected_intent": "CHECK_STATUS"
+  }
+]

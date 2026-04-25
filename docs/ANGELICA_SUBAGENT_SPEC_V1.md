@@ -24,10 +24,11 @@ Resolver solicitudes de muestras de ASAVIM por WhatsApp con entendimiento natura
 
 ## Módulos internos
 - `context_builder`: normaliza mensaje + memoria conversacional
-- `intent_engine`: intención principal/secundaria + entidades
-- `planner`: plan secuencial de herramientas
+- `intent_engine`: intención principal/secundaria + entidades y riesgo
+- `planner`: plan secuencial de herramientas + confirmación
 - `policy_guard`: autorización por rol/permisos
 - `executor`: ejecución segura contra `tool_registry`
+- `orchestrator`: compone salida final de conversación
 
 ## Estados mínimos
 - `NO_ACTIVE_FLOW`
@@ -39,3 +40,6 @@ Resolver solicitudes de muestras de ASAVIM por WhatsApp con entendimiento natura
 - `PENDING_MANAGEMENT`
 - `MANUAL_REVIEW_REQUIRED`
 - `APPROVED_OR_DISTRIBUTED`
+
+## Regla de idempotencia
+Si se recibe un `messageId` duplicado, no se repiten acciones de negocio.
