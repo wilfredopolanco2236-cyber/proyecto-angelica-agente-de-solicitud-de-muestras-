@@ -1,0 +1,11 @@
+# State Machine (V1)
+
+## State transitions (core)
+- `NO_ACTIVE_FLOW -> AWAITING_CLIENT` (start request)
+- `AWAITING_CLIENT -> AWAITING_PRODUCT` (client resolved)
+- `AWAITING_PRODUCT -> AWAITING_QUANTITY` (product resolved w/o qty)
+- `AWAITING_QUANTITY -> DRAFT_READY_FOR_REVIEW` (item added + close trigger)
+- `AWAITING_PRODUCT -> DRAFT_READY_FOR_REVIEW` (`solo eso` / `listo`)
+- `DRAFT_READY_FOR_REVIEW -> PENDING_MANAGEMENT` (send to management)
+- `PENDING_MANAGEMENT -> APPROVED_OR_DISTRIBUTED` (signed PDF valid)
+- `* -> MANUAL_REVIEW_REQUIRED` (policy/document mismatch)

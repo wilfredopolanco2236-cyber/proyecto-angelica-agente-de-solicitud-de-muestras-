@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Angelica Intent Decision",
+  "type": "object",
+  "required": [
+    "goal",
+    "primary_intent",
+    "secondary_intents",
+    "confidence",
+    "entities",
+    "missing_slots",
+    "actions",
+    "reply",
+    "needs_confirmation"
+  ],
+  "properties": {
+    "goal": { "type": "string" },
+    "primary_intent": { "type": "string" },
+    "secondary_intents": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "confidence": { "type": "string", "enum": ["high", "medium", "low"] },
+    "entities": { "type": "object" },
+    "missing_slots": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["tool", "args"],
+        "properties": {
+          "tool": { "type": "string" },
+          "args": { "type": "object" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "reply": { "type": "string" },
+    "needs_confirmation": { "type": "boolean" }
+  },
+  "additionalProperties": false
+}

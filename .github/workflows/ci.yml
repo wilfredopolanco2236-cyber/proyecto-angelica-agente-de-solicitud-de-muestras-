@@ -1,0 +1,17 @@
+name: ci
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  scaffold-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate repository scaffold
+        run: |
+          test -f README.md
+          test -f docs/ANGELICA_SUBAGENT_SPEC_V1.md
+          test -f contracts/angelica_input.contract.json

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Angelica Output Contract",
+  "type": "object",
+  "required": [
+    "status",
+    "confidence",
+    "risk_level",
+    "goal_result",
+    "state_delta",
+    "actions_executed",
+    "user_reply",
+    "artifacts",
+    "audit_ref"
+  ],
+  "properties": {
+    "status": { "type": "string", "enum": ["completed", "needs_input", "blocked", "failed"] },
+    "confidence": { "type": "string", "enum": ["high", "medium", "low"] },
+    "risk_level": { "type": "string", "enum": ["low", "medium", "high"] },
+    "goal_result": { "type": "string" },
+    "state_delta": {
+      "type": "object",
+      "required": ["from", "to"],
+      "properties": {
+        "from": { "type": "string" },
+        "to": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "actions_executed": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "user_reply": { "type": "string" },
+    "artifacts": {
+      "type": "array",
+      "items": { "type": "object" }
+    },
+    "handoff_recommendation": { "type": ["object", "null"] },
+    "audit_ref": { "type": "string" }
+  },
+  "additionalProperties": false
+}
