@@ -1,7 +1,8 @@
+import { logAudit } from '../core/audit';
 import { buildContext } from '../core/context_builder';
 import { runOrchestrator } from '../core/orchestrator';
+import { appendTurn, getSession, saveSession } from '../core/session_store';
 import { ConversationState, UserContext } from '../types';
-import { getSession, saveSession } from '../core/session_store';
 
 export interface InboundPayload {
   text?: string;
@@ -21,6 +22,7 @@ export interface InboundResponse {
   userReply: string;
   executions: { ok: boolean; tool: string; message: string; data?: Record<string, unknown> }[];
   duplicateMessage: boolean;
+  auditRef?: string;
 }
 
 const processedMessages = new Set<string>();
@@ -50,18 +52,35 @@ export function routeWhatsappThroughAngelica(
   processedMessages.add(payload.messageId);
 
   const session = getSession(payload.phone);
-  const state = currentState ?? session.state;
+  const stateBefore = currentState ?? session.state;
 
   const context = buildContext({
     traceId,
     rawText: payload.text ?? '',
     user,
-    memory: { state }
+    memory: { state: stateBefore }
   });
 
   const orchestration = runOrchestrator(context);
   session.state = orchestration.nextState as ConversationState;
   saveSession(session);
+
+  appendTurn(payload.phone, {
+    traceId,
+    input: payload.text ?? '',
+    intent: orchestration.intent,
+    at: new Date().toISOString()
+  });
+
+  const auditRef = logAudit({
+    traceId,
+    phone: payload.phone,
+    intent: orchestration.intent,
+    stateBefore,
+    stateAfter: orchestration.nextState,
+    actions: orchestration.executions.map((execution) => execution.tool),
+    timestamp: new Date().toISOString()
+  });
 
   return {
     traceId,
@@ -73,6 +92,7 @@ export function routeWhatsappThroughAngelica(
     needsConfirmation: orchestration.needsConfirmation,
     userReply: orchestration.userReply,
     executions: orchestration.executions,
-    duplicateMessage: false
+    duplicateMessage: false,
+    auditRef
   };
 }

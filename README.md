@@ -26,6 +26,8 @@ Angélica es un subagente de dominio (`agent.angelica.samples.v1`) preparado par
 - `policy_guard`: autorización por rol/permisos.
 - `executor`: ejecución real contra handlers permitidos.
 - `orchestrator`: composición final para respuesta del canal.
+- `audit`: registro de acciones por `traceId`.
+- `allowlist_store`: soporte para altas/bajas/actualizaciones de usuarios autorizados.
 
 ## Validación local rápida
 ```bash

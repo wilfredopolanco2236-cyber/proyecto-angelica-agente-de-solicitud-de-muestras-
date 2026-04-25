@@ -21,5 +21,6 @@ export const TOOL_REGISTRY = [
   'allowlist.add',
   'allowlist.update',
   'allowlist.revoke',
+  'allowlist.list',
   'audit.log'
 ] as const;

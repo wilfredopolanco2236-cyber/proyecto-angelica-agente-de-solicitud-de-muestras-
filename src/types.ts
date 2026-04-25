@@ -21,6 +21,7 @@ export type Intent =
   | 'CHECK_STATUS'
   | 'REMOVE_ITEM'
   | 'UPDATE_ITEM'
+  | 'MANAGE_ALLOWLIST'
   | 'GREET'
   | 'HELP'
   | 'UNKNOWN';

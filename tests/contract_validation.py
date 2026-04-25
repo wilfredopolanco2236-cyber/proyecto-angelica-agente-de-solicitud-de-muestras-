@@ -31,6 +31,9 @@ REQUIRED_RUNTIME_FILES = [
     "src/core/orchestrator/index.ts",
     "src/tools/handlers.ts",
     "src/api/whatsappInbound.ts",
+    "src/core/normalizers/requestNumber.ts",
+    "src/core/allowlist_store/index.ts",
+    "src/core/audit/index.ts",
 ]
 
 

@@ -11,3 +11,5 @@
 9. Unauthorized user executing `allowlist.add` -> blocked by policy guard.
 
 Automatable fixtures: `tests/unit/scenarios.json` + `tests/contract_validation.py`.
+
+10. Input: `agrega este numero como vendedor` -> intent `MANAGE_ALLOWLIST` con confirmación.

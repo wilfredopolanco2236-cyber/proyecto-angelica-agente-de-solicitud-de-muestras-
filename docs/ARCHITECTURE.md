@@ -13,7 +13,7 @@ Angélica is a **domain subagent** (`agent.angelica.samples.v1`) ready to be cal
 7. Policy Guard
 8. Executor (real handlers)
 9. Orchestrator response composer
-10. Audit + response
+10. Audit logger + response
 
 ## Swarm-ready guarantees
 - Versioned contracts (`contracts/*.json`)

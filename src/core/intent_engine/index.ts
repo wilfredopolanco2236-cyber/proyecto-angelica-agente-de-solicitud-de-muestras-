@@ -1,5 +1,6 @@
 import { Confidence, Intent } from '../../types';
 import { AngelicaContext } from '../context_builder';
+import { normalizeRequestNumber } from '../normalizers/requestNumber';
 
 export interface ExtractedEntities {
   cliente?: string;
@@ -32,6 +33,7 @@ function detectIntent(text: string): Intent {
   if (/\b(ver solicitud|muestra borrador|resumen|que llevo|como va)\b/.test(text)) return 'SHOW_DRAFT';
   if (/\b(quita|elimina|borra|saca)\b/.test(text)) return 'REMOVE_ITEM';
   if (/\b(cambia|modifica|corrige|mejor|era|sustituye)\b/.test(text)) return 'UPDATE_ITEM';
+  if (/\b(agrega este numero|suspende este numero|revoca el numero|allow list|allowlist)\b/.test(text)) return 'MANAGE_ALLOWLIST';
   if (/\b(estado)\b/.test(text) || STATUS_REGEX.test(text)) return 'CHECK_STATUS';
   if (/\b(quiero solicitar|nueva solicitud|solicitud de muestras|necesito una muestra|hazme una solicitud)\b/.test(text)) return 'START_SAMPLE_REQUEST';
   if (/\b(para |cliente )/.test(text)) return 'SET_CLIENT';
@@ -65,7 +67,7 @@ function extractEntities(text: string): ExtractedEntities {
 
   const statusMatch = text.match(STATUS_REGEX);
   if (statusMatch) {
-    entities.numeroSolicitud = statusMatch[0].toUpperCase().replace(/\s+/g, '-');
+    entities.numeroSolicitud = normalizeRequestNumber(statusMatch[0]);
   }
 
   const quantityMatch = text.match(QUANTITY_REGEX);
@@ -101,6 +103,8 @@ function goalFromIntent(intent: Intent): string {
       return 'finish_draft_and_prepare_review';
     case 'CHECK_STATUS':
       return 'check_request_status';
+    case 'MANAGE_ALLOWLIST':
+      return 'manage_allowlist';
     case 'REMOVE_ITEM':
       return 'remove_item_from_draft';
     case 'UPDATE_ITEM':
@@ -111,7 +115,7 @@ function goalFromIntent(intent: Intent): string {
 }
 
 function getRiskLevel(intent: Intent): 'low' | 'medium' | 'high' {
-  if (intent === 'FINISH_DRAFT' || intent === 'UPDATE_ITEM') return 'medium';
+  if (intent === 'FINISH_DRAFT' || intent === 'UPDATE_ITEM' || intent === 'MANAGE_ALLOWLIST') return 'medium';
   return 'low';
 }
 

@@ -85,6 +85,14 @@ export function buildPlan(decision: IntentDecision, currentState: ConversationSt
         needsConfirmation: false
       };
 
+
+    case 'MANAGE_ALLOWLIST':
+      return {
+        actions: [{ tool: 'allowlist.update', args: { raw: decision.entities.itemSelector ?? 'from_message' }, reason: 'Manage allowlist request' }],
+        nextState: currentState,
+        needsConfirmation: true
+      };
+
     case 'SHOW_DRAFT':
       return {
         actions: [{ tool: 'draft.show', args: {}, reason: 'Render active draft summary' }],

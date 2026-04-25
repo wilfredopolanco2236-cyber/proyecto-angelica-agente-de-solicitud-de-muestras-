@@ -29,7 +29,7 @@ export function executeActions(actions: Action[], user: UserContext, context: Ex
       };
     }
 
-    const policy = checkPolicy(user, action.tool);
+    const policy = checkPolicy(user, action.tool, action.args);
     if (!policy.allowed) {
       return {
         ok: false,

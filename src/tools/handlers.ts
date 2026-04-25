@@ -1,3 +1,4 @@
+import { listAllowlist, revokeAllowlist, upsertAllowlist } from '../core/allowlist_store';
 import { getSession, saveSession } from '../core/session_store';
 
 export interface ToolResult {
@@ -101,5 +102,37 @@ export const TOOL_HANDLERS: Record<string, (args: Record<string, unknown>, ctx: 
         candidates: ['FRAGANCIA PURE SENSE', 'FRAGANCIA VETIVER']
       }
     };
+  },
+
+  'allowlist.add': (args) => {
+    const phone = getString(args, 'phone');
+    const name = getString(args, 'name', 'USUARIO');
+    const role = getString(args, 'role', 'VENDEDOR');
+    const entry = upsertAllowlist({ phone, name, role, status: 'ACTIVE' });
+    return { ok: true, data: { entry } };
+  },
+
+  'allowlist.update': (args) => {
+    const raw = getString(args, 'raw').toLowerCase();
+    if (raw.includes('revoca')) {
+      const phone = getString(args, 'phone');
+      return { ok: revokeAllowlist(phone), data: { phone } };
+    }
+
+    const phone = getString(args, 'phone', '+10000000000');
+    const name = getString(args, 'name', 'USUARIO');
+    const role = getString(args, 'role', 'VENDEDOR');
+    const status = raw.includes('suspende') ? 'SUSPENDED' : 'ACTIVE';
+    const entry = upsertAllowlist({ phone, name, role, status });
+    return { ok: true, data: { entry } };
+  },
+
+  'allowlist.revoke': (args) => {
+    const phone = getString(args, 'phone');
+    return { ok: revokeAllowlist(phone), data: { phone } };
+  },
+
+  'allowlist.list': () => {
+    return { ok: true, data: { users: listAllowlist() } };
   }
 };

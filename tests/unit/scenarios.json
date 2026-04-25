@@ -5,5 +5,6 @@
   {"input": "solo eso", "expected_intent": "FINISH_DRAFT"},
   {"input": "quita acetaminofen", "expected_intent": "REMOVE_ITEM"},
   {"input": "cambia pure sense a 20 gramos", "expected_intent": "UPDATE_ITEM"},
-  {"input": "estado sm20260425-sab-0009", "expected_intent": "CHECK_STATUS"}
+  {"input": "estado sm20260425-sab-0009", "expected_intent": "CHECK_STATUS"},
+  {"input": "agrega este numero como vendedor", "expected_intent": "MANAGE_ALLOWLIST"}
 ]

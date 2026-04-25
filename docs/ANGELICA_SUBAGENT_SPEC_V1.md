@@ -30,6 +30,8 @@ Resolver solicitudes de muestras de ASAVIM por WhatsApp con entendimiento natura
 - `policy_guard`: autorización por rol/permisos
 - `executor`: ejecución segura contra `tool_registry` y handlers reales
 - `orchestrator`: compone salida final de conversación
+- `audit`: registra acciones críticas con `auditRef`
+- `allowlist_store`: persistencia de usuarios autorizados en memoria
 
 ## Estados mínimos
 - `NO_ACTIVE_FLOW`
