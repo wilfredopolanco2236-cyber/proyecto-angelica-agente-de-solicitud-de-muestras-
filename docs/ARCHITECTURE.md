@@ -6,13 +6,14 @@ Angélica is a **domain subagent** (`agent.angelica.samples.v1`) ready to be cal
 ## Runtime pipeline
 1. Channel adapter (n8n thin workflow)
 2. `whatsapp/inbound` endpoint
-3. Context Builder
-4. Intent Engine
-5. Planner
-6. Policy Guard
-7. Executor
-8. Orchestrator response composer
-9. Audit + response
+3. Session Store (state + draft memory)
+4. Context Builder
+5. Intent Engine
+6. Planner
+7. Policy Guard
+8. Executor (real handlers)
+9. Orchestrator response composer
+10. Audit + response
 
 ## Swarm-ready guarantees
 - Versioned contracts (`contracts/*.json`)

@@ -60,7 +60,7 @@ export function buildPlan(decision: IntentDecision, currentState: ConversationSt
 
     case 'UPDATE_ITEM':
       return {
-        actions: [{ tool: 'draft.update_item', args: { selector: decision.entities.itemSelector }, reason: 'Update selected item' }],
+        actions: [{ tool: 'draft.update_item', args: { selector: decision.entities.itemSelector, cantidad: decision.entities.cantidad, unidad: decision.entities.unidad }, reason: 'Update selected item' }],
         nextState: 'AWAITING_PRODUCT',
         needsConfirmation: true
       };

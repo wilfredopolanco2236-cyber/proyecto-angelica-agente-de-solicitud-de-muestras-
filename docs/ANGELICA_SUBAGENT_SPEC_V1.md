@@ -23,11 +23,12 @@ Resolver solicitudes de muestras de ASAVIM por WhatsApp con entendimiento natura
 - No modifica PDF firmado
 
 ## Módulos internos
+- `session_store`: memoria activa por teléfono (estado + borrador)
 - `context_builder`: normaliza mensaje + memoria conversacional
 - `intent_engine`: intención principal/secundaria + entidades y riesgo
 - `planner`: plan secuencial de herramientas + confirmación
 - `policy_guard`: autorización por rol/permisos
-- `executor`: ejecución segura contra `tool_registry`
+- `executor`: ejecución segura contra `tool_registry` y handlers reales
 - `orchestrator`: compone salida final de conversación
 
 ## Estados mínimos

@@ -26,6 +26,13 @@ REQUIRED_OUTPUT_FIELDS = {
     "audit_ref",
 }
 
+REQUIRED_RUNTIME_FILES = [
+    "src/core/session_store/index.ts",
+    "src/core/orchestrator/index.ts",
+    "src/tools/handlers.ts",
+    "src/api/whatsappInbound.ts",
+]
+
 
 def load_json(path: str):
     with open(path, "r", encoding="utf-8") as f:
@@ -50,12 +57,19 @@ def validate_scenarios(path: str):
             raise AssertionError(f"scenario {idx} must contain input and expected_intent")
 
 
+def validate_runtime_files(paths: list[str]):
+    missing = [path for path in paths if not Path(path).exists()]
+    if missing:
+        raise AssertionError(f"missing runtime files: {missing}")
+
+
 def main():
     validate_contract_required("contracts/angelica_input.contract.json", REQUIRED_INPUT_FIELDS)
     validate_contract_required("contracts/angelica_output.contract.json", REQUIRED_OUTPUT_FIELDS)
     validate_scenarios("tests/unit/scenarios.json")
+    validate_runtime_files(REQUIRED_RUNTIME_FILES)
 
-    print("contract and scenario validations passed")
+    print("contract, scenario and runtime validations passed")
 
 
 if __name__ == "__main__":

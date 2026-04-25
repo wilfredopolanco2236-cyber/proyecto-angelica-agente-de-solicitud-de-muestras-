@@ -1,6 +1,7 @@
 import { UserContext } from '../../types';
 import { checkPolicy } from '../policy_guard';
 import { TOOL_REGISTRY } from '../../tools/registry';
+import { TOOL_HANDLERS } from '../../tools/handlers';
 
 export interface Action {
   tool: string;
@@ -11,9 +12,14 @@ export interface ExecutionResult {
   ok: boolean;
   tool: string;
   message: string;
+  data?: Record<string, unknown>;
 }
 
-export function executeActions(actions: Action[], user: UserContext): ExecutionResult[] {
+export interface ExecutorContext {
+  phone: string;
+}
+
+export function executeActions(actions: Action[], user: UserContext, context: ExecutorContext): ExecutionResult[] {
   return actions.map((action) => {
     if (!TOOL_REGISTRY.includes(action.tool)) {
       return {
@@ -32,10 +38,21 @@ export function executeActions(actions: Action[], user: UserContext): ExecutionR
       };
     }
 
+    const handler = TOOL_HANDLERS[action.tool];
+    if (!handler) {
+      return {
+        ok: false,
+        tool: action.tool,
+        message: 'Tool has no handler implementation yet'
+      };
+    }
+
+    const result = handler(action.args, { phone: context.phone });
     return {
-      ok: true,
+      ok: result.ok,
       tool: action.tool,
-      message: `Executed ${action.tool}`
+      message: result.message ?? `Executed ${action.tool}`,
+      data: result.data
     };
   });
 }

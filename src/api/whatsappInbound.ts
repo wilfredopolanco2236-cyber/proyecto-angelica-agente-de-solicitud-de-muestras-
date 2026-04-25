@@ -1,6 +1,7 @@
 import { buildContext } from '../core/context_builder';
 import { runOrchestrator } from '../core/orchestrator';
 import { ConversationState, UserContext } from '../types';
+import { getSession, saveSession } from '../core/session_store';
 
 export interface InboundPayload {
   text?: string;
@@ -18,7 +19,7 @@ export interface InboundResponse {
   nextState: ConversationState;
   needsConfirmation: boolean;
   userReply: string;
-  executions: { ok: boolean; tool: string; message: string }[];
+  executions: { ok: boolean; tool: string; message: string; data?: Record<string, unknown> }[];
   duplicateMessage: boolean;
 }
 
@@ -27,7 +28,7 @@ const processedMessages = new Set<string>();
 export function routeWhatsappThroughAngelica(
   payload: InboundPayload,
   user: UserContext,
-  currentState: ConversationState = 'NO_ACTIVE_FLOW'
+  currentState?: ConversationState
 ): InboundResponse {
   const traceId = `${payload.messageId}:${payload.phone}`;
 
@@ -38,7 +39,7 @@ export function routeWhatsappThroughAngelica(
       intent: 'UNKNOWN',
       confidence: 'low',
       riskLevel: 'low',
-      nextState: currentState,
+      nextState: currentState ?? 'NO_ACTIVE_FLOW',
       needsConfirmation: false,
       userReply: 'Mensaje duplicado detectado. No repetí acciones.',
       executions: [],
@@ -48,14 +49,19 @@ export function routeWhatsappThroughAngelica(
 
   processedMessages.add(payload.messageId);
 
+  const session = getSession(payload.phone);
+  const state = currentState ?? session.state;
+
   const context = buildContext({
     traceId,
     rawText: payload.text ?? '',
     user,
-    memory: { state: currentState }
+    memory: { state }
   });
 
   const orchestration = runOrchestrator(context);
+  session.state = orchestration.nextState as ConversationState;
+  saveSession(session);
 
   return {
     traceId,
